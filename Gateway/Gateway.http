@@ -1,0 +1,19 @@
+@Gateway_HostAddress = http://localhost:5271
+
+### ============================================
+### GET - Tous les patients via la Gateway
+### ============================================
+
+GET {{Gateway_HostAddress}}/api/patients
+Accept: application/json
+
+###
+
+### ============================================
+### GET - Un patient via la Gateway
+### ============================================
+
+GET {{Gateway_HostAddress}}/api/patients/1
+Accept: application/json
+
+###

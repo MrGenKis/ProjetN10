@@ -1,0 +1,58 @@
+@PatientService_HostAddress = http://localhost:5247
+
+### ============================================
+### GET - Récupérer tous les patients
+### ============================================
+
+GET {{PatientService_HostAddress}}/api/patients
+Accept: application/json
+
+###
+
+### ============================================
+### GET - Récupérer un patient par son ID
+### ============================================
+
+GET {{PatientService_HostAddress}}/api/patients/1
+Accept: application/json
+
+###
+
+### ============================================
+### POST - Ajouter un patient
+### ============================================
+
+POST {{PatientService_HostAddress}}/api/patients
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Martin",
+  "dateOfBirth": "1985-02-10T00:00:00",
+  "gender": "F"
+}
+
+###
+
+###
+
+###
+
+### ============================================
+### PUT - Modifier le patient 1
+### ============================================
+
+PUT {{PatientService_HostAddress}}/api/patients/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Test",
+  "dateOfBirth": "1990-05-15T00:00:00",
+  "gender": "M",
+  "address": "20 rue de Rouen",
+  "phoneNumber": "0601020304"
+}
+
+###
