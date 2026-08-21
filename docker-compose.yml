@@ -1,0 +1,80 @@
+services:
+
+  patientdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mediscreen-patientdb
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Mediscreen123!"
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - patientdb_data:/var/opt/mssql
+
+
+  patientservice:
+    image: mediscreen-patientservice
+    container_name: mediscreen-patientservice
+
+    build:
+      context: .
+      dockerfile: PatientService/Dockerfile
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: "Server=patientdb,1433;Database=MediscreenPatientDb;User Id=sa;Password=Mediscreen123!;TrustServerCertificate=True;"
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - patientdb
+
+
+  gateway:
+    image: mediscreen-gateway
+    container_name: mediscreen-gateway
+
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: http://+:8080
+
+    ports:
+      - "8081:8080"
+
+    depends_on:
+      - patientservice
+
+
+  frontend:
+    image: mediscreen-frontend
+    container_name: mediscreen-frontend
+
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: http://+:8080
+
+      Gateway__BaseUrl: "http://gateway:8080/"
+
+    ports:
+      - "8082:8080"
+
+    depends_on:
+      - gateway
+
+
+volumes:
+  patientdb_data:

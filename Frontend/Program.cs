@@ -1,29 +1,41 @@
+using Frontend.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var gatewayBaseUrl = builder.Configuration["Gateway:BaseUrl"]
+    ?? throw new InvalidOperationException(
+        "L'adresse de la Gateway n'est pas configurée."
+    );
+
+builder.Services.AddHttpClient<PatientApiService>(client =>
+{
+    client.BaseAddress = new Uri(gatewayBaseUrl);
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment()
+    && !app.Environment.IsEnvironment("Docker"))
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment("Docker"))
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Patients}/{action=Index}/{id?}");
 
 app.Run();
