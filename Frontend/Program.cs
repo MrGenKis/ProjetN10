@@ -14,6 +14,11 @@ builder.Services.AddHttpClient<PatientApiService>(client =>
     client.BaseAddress = new Uri(gatewayBaseUrl);
 });
 
+builder.Services.AddHttpClient<NoteApiService>(client =>
+{
+    client.BaseAddress = new Uri(gatewayBaseUrl);
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment()

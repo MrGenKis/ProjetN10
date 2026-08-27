@@ -23,6 +23,30 @@
       ],
       "UpstreamPathTemplate": "/api/patients/{id}",
       "UpstreamHttpMethod": [ "GET", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/notes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5136
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notes",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/notes/patient/{patientId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5136
+        }
+      ],
+      "UpstreamPathTemplate": "/api/notes/patient/{patientId}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ],
   "GlobalConfiguration": {

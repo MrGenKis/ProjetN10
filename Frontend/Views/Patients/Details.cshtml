@@ -1,4 +1,4 @@
-﻿@model Frontend.Models.PatientViewModel
+﻿@model Frontend.Models.PatientDetailsViewModel
 
 @{
     ViewData["Title"] = "Détails du patient";
@@ -8,33 +8,99 @@
 
 <hr />
 
+<h3>Informations personnelles</h3>
+
 <dl class="row">
     <dt class="col-sm-3">Prénom</dt>
-    <dd class="col-sm-9">@Model.FirstName</dd>
+    <dd class="col-sm-9">@Model.Patient.FirstName</dd>
 
     <dt class="col-sm-3">Nom</dt>
-    <dd class="col-sm-9">@Model.LastName</dd>
+    <dd class="col-sm-9">@Model.Patient.LastName</dd>
 
     <dt class="col-sm-3">Date de naissance</dt>
-    <dd class="col-sm-9">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+    <dd class="col-sm-9">
+        @Model.Patient.DateOfBirth.ToString("dd/MM/yyyy")
+    </dd>
 
     <dt class="col-sm-3">Genre</dt>
-    <dd class="col-sm-9">@Model.Gender</dd>
+    <dd class="col-sm-9">@Model.Patient.Gender</dd>
 
     <dt class="col-sm-3">Adresse</dt>
-    <dd class="col-sm-9">@Model.Address</dd>
+    <dd class="col-sm-9">@Model.Patient.Address</dd>
 
     <dt class="col-sm-3">Téléphone</dt>
-    <dd class="col-sm-9">@Model.PhoneNumber</dd>
+    <dd class="col-sm-9">@Model.Patient.PhoneNumber</dd>
 </dl>
 
 <a asp-action="Edit"
-   asp-route-id="@Model.Id"
+   asp-route-id="@Model.Patient.Id"
    class="btn btn-warning">
-    Modifier
+    Modifier les informations
 </a>
 
 <a asp-action="Index"
    class="btn btn-secondary">
     Retour
 </a>
+
+<hr class="my-4" />
+
+<h3>Historique des notes</h3>
+
+@if (Model.Notes.Count == 0)
+{
+    <div class="alert alert-info">
+        Aucune note enregistrée pour ce patient.
+    </div>
+}
+else
+{
+    @foreach (var note in Model.Notes)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+
+                <small class="text-muted">
+                    @note.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                </small>
+
+                <p class="mt-2"
+                   style="white-space: pre-wrap;">@note.Content</p>
+
+            </div>
+        </div>
+    }
+}
+
+<hr class="my-4" />
+
+<h3>Ajouter une note</h3>
+
+<form asp-action="AddNote"
+      method="post">
+
+    <input type="hidden"
+           name="patientId"
+           value="@Model.Patient.Id" />
+
+    <div class="mb-3">
+
+        <label for="newNoteContent"
+               class="form-label">
+            Note du médecin
+        </label>
+
+        <textarea name="newNoteContent"
+                  id="newNoteContent"
+                  class="form-control"
+                  rows="6"
+                  required></textarea>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Ajouter la note
+    </button>
+
+</form>

@@ -1,0 +1,48 @@
+@NoteService_HostAddress = http://localhost:5136
+
+### Toutes les notes
+
+GET {{NoteService_HostAddress}}/api/notes
+Accept: application/json
+
+###
+
+### Notes du patient 1
+
+GET {{NoteService_HostAddress}}/api/notes/patient/1
+Accept: application/json
+
+###
+
+### Notes du patient 2
+
+GET {{NoteService_HostAddress}}/api/notes/patient/2
+Accept: application/json
+
+###
+
+### Notes du patient 3
+
+GET {{NoteService_HostAddress}}/api/notes/patient/3
+Accept: application/json
+
+###
+
+### Notes du patient 4
+
+GET {{NoteService_HostAddress}}/api/notes/patient/4
+Accept: application/json
+
+###
+
+### Ajouter une note
+
+POST {{NoteService_HostAddress}}/api/notes
+Content-Type: application/json
+
+{
+  "patientId": 1,
+  "content": "Nouvelle note médicale de test.\nDeuxième ligne."
+}
+
+###

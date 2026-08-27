@@ -4,5 +4,6 @@
   </Project>
   <Project Path="Frontend/Frontend.csproj" />
   <Project Path="Gateway/Gateway.csproj" />
+  <Project Path="NoteService/NoteService.csproj" Id="900fe61e-83f5-4cb2-b2e8-75dad7344d63" />
   <Project Path="PatientService/PatientService.csproj" />
 </Solution>
