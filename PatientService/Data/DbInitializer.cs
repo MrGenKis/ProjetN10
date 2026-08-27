@@ -6,13 +6,7 @@ public static class DbInitializer
 {
     public static void Initialize(ApplicationDbContext context)
     {
-        // Si des patients existent déjà, on ne rajoute pas les données de test.
-        if (context.Patients.Any())
-        {
-            return;
-        }
-
-        var patients = new Patient[]
+        var testPatients = new List<Patient>
         {
             new Patient
             {
@@ -55,7 +49,18 @@ public static class DbInitializer
             }
         };
 
-        context.Patients.AddRange(patients);
+        foreach (var patient in testPatients)
+        {
+            var exists = context.Patients.Any(p =>
+                p.FirstName == patient.FirstName &&
+                p.LastName == patient.LastName);
+
+            if (!exists)
+            {
+                context.Patients.Add(patient);
+            }
+        }
+
         context.SaveChanges();
     }
 }

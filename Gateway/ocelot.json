@@ -30,7 +30,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5136
+          "Port": 5183
         }
       ],
       "UpstreamPathTemplate": "/api/notes",
@@ -42,7 +42,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5136
+          "Port": 5183
         }
       ],
       "UpstreamPathTemplate": "/api/notes/patient/{patientId}",
