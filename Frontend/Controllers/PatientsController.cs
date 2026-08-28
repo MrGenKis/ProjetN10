@@ -50,18 +50,31 @@ public class PatientsController : Controller
         int patientId,
         string newNoteContent)
     {
+        if (patientId <= 0)
+        {
+            return BadRequest();
+        }
+
         if (string.IsNullOrWhiteSpace(newNoteContent))
         {
+            TempData["NoteError"] = "La note ne peut pas être vide.";
+
             return RedirectToAction(
                 nameof(Details),
                 new { id = patientId }
             );
         }
 
-        await _noteApiService.CreateNoteAsync(
+        var success = await _noteApiService.CreateNoteAsync(
             patientId,
             newNoteContent
         );
+
+        if (!success)
+        {
+            TempData["NoteError"] =
+                "Impossible d'ajouter la note.";
+        }
 
         return RedirectToAction(
             nameof(Details),
@@ -84,7 +97,8 @@ public class PatientsController : Controller
             return View(patient);
         }
 
-        var success = await _patientApiService.CreatePatientAsync(patient);
+        var success =
+            await _patientApiService.CreatePatientAsync(patient);
 
         if (!success)
         {
@@ -102,7 +116,8 @@ public class PatientsController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var patient = await _patientApiService.GetPatientAsync(id);
+        var patient =
+            await _patientApiService.GetPatientAsync(id);
 
         if (patient == null)
         {
@@ -114,14 +129,16 @@ public class PatientsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(PatientViewModel patient)
+    public async Task<IActionResult> Edit(
+        PatientViewModel patient)
     {
         if (!ModelState.IsValid)
         {
             return View(patient);
         }
 
-        var success = await _patientApiService.UpdatePatientAsync(patient);
+        var success =
+            await _patientApiService.UpdatePatientAsync(patient);
 
         if (!success)
         {

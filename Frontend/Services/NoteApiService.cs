@@ -12,7 +12,8 @@ public class NoteApiService
         _httpClient = httpClient;
     }
 
-    public async Task<List<NoteViewModel>> GetNotesByPatientAsync(int patientId)
+    public async Task<List<NoteViewModel>> GetNotesByPatientAsync(
+        int patientId)
     {
         var notes = await _httpClient
             .GetFromJsonAsync<List<NoteViewModel>>(
@@ -22,7 +23,9 @@ public class NoteApiService
         return notes ?? new List<NoteViewModel>();
     }
 
-    public async Task<bool> CreateNoteAsync(int patientId, string content)
+    public async Task<bool> CreateNoteAsync(
+        int patientId,
+        string content)
     {
         var note = new NoteViewModel
         {

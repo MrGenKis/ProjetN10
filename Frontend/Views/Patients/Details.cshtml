@@ -59,14 +59,12 @@ else
     {
         <div class="card mb-3">
             <div class="card-body">
-
                 <small class="text-muted">
                     @note.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                 </small>
 
                 <p class="mt-2"
                    style="white-space: pre-wrap;">@note.Content</p>
-
             </div>
         </div>
     }
@@ -76,15 +74,17 @@ else
 
 <h3>Ajouter une note</h3>
 
-<form asp-action="AddNote"
+<form asp-controller="Patients"
+      asp-action="AddNote"
       method="post">
+
+    @Html.AntiForgeryToken()
 
     <input type="hidden"
            name="patientId"
            value="@Model.Patient.Id" />
 
     <div class="mb-3">
-
         <label for="newNoteContent"
                class="form-label">
             Note du médecin
@@ -94,13 +94,12 @@ else
                   id="newNoteContent"
                   class="form-control"
                   rows="6"
+                  placeholder="Saisissez la note médicale..."
                   required></textarea>
-
     </div>
 
     <button type="submit"
             class="btn btn-primary">
         Ajouter la note
     </button>
-
 </form>
