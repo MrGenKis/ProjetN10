@@ -19,6 +19,11 @@ builder.Services.AddHttpClient<NoteApiService>(client =>
     client.BaseAddress = new Uri(gatewayBaseUrl);
 });
 
+builder.Services.AddHttpClient<RiskApiService>(client =>
+{
+    client.BaseAddress = new Uri(gatewayBaseUrl);
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment()

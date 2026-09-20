@@ -8,13 +8,16 @@ public class PatientsController : Controller
 {
     private readonly PatientApiService _patientApiService;
     private readonly NoteApiService _noteApiService;
+    private readonly RiskApiService _riskApiService;
 
     public PatientsController(
         PatientApiService patientApiService,
-        NoteApiService noteApiService)
+        NoteApiService noteApiService,
+        RiskApiService riskApiService)
     {
         _patientApiService = patientApiService;
         _noteApiService = noteApiService;
+        _riskApiService = riskApiService;
     }
 
     public async Task<IActionResult> Index()
@@ -35,10 +38,13 @@ public class PatientsController : Controller
 
         var notes = await _noteApiService.GetNotesByPatientAsync(id);
 
+        var riskAssessment = await _riskApiService.GetRiskAsync(id);
+
         var viewModel = new PatientDetailsViewModel
         {
             Patient = patient,
-            Notes = notes
+            Notes = notes,
+            RiskAssessment = riskAssessment
         };
 
         return View(viewModel);

@@ -32,6 +32,44 @@
     <dd class="col-sm-9">@Model.Patient.PhoneNumber</dd>
 </dl>
 
+<hr class="my-4" />
+
+<h3>Évaluation du risque de diabète</h3>
+
+@if (Model.RiskAssessment == null)
+{
+    <div class="alert alert-warning">
+        Impossible de calculer le risque pour ce patient.
+    </div>
+}
+else
+{
+    var riskClass = Model.RiskAssessment.RiskLevel switch
+    {
+        "None" => "alert-success",
+        "Borderline" => "alert-info",
+        "In Danger" => "alert-warning",
+        "Early onset" => "alert-danger",
+        _ => "alert-secondary"
+    };
+
+    <div class="alert @riskClass">
+        <h4>
+            Niveau de risque :
+            @Model.RiskAssessment.RiskLevel
+        </h4>
+
+        <p class="mb-1">
+            Âge : @Model.RiskAssessment.Age ans
+        </p>
+
+        <p class="mb-0">
+            Déclencheurs détectés :
+            @Model.RiskAssessment.TriggerCount
+        </p>
+    </div>
+}
+
 <a asp-action="Edit"
    asp-route-id="@Model.Patient.Id"
    class="btn btn-warning">
@@ -59,12 +97,16 @@ else
     {
         <div class="card mb-3">
             <div class="card-body">
+
                 <small class="text-muted">
-                    @note.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                    @note.CreatedAt
+                    .ToLocalTime()
+                    .ToString("dd/MM/yyyy HH:mm")
                 </small>
 
                 <p class="mt-2"
                    style="white-space: pre-wrap;">@note.Content</p>
+
             </div>
         </div>
     }
@@ -73,6 +115,13 @@ else
 <hr class="my-4" />
 
 <h3>Ajouter une note</h3>
+
+@if (TempData["NoteError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["NoteError"]
+    </div>
+}
 
 <form asp-controller="Patients"
       asp-action="AddNote"
@@ -85,6 +134,7 @@ else
            value="@Model.Patient.Id" />
 
     <div class="mb-3">
+
         <label for="newNoteContent"
                class="form-label">
             Note du médecin
@@ -96,10 +146,12 @@ else
                   rows="6"
                   placeholder="Saisissez la note médicale..."
                   required></textarea>
+
     </div>
 
     <button type="submit"
             class="btn btn-primary">
         Ajouter la note
     </button>
+
 </form>

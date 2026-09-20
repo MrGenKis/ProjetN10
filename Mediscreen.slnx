@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="AuthService/AuthService.csproj" Id="8289f30e-5a24-4ef8-a3db-923ffcf0c91e" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
@@ -6,4 +7,5 @@
   <Project Path="Gateway/Gateway.csproj" />
   <Project Path="NoteService/NoteService.csproj" Id="900fe61e-83f5-4cb2-b2e8-75dad7344d63" />
   <Project Path="PatientService/PatientService.csproj" />
+  <Project Path="RiskService/RiskService.csproj" Id="63fb15fd-6f38-46d4-b85e-ef9e1b41b096" />
 </Solution>
