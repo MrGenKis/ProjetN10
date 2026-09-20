@@ -179,6 +179,23 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+# Secrets
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Build .NET
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml

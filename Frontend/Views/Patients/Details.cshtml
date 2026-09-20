@@ -99,11 +99,8 @@ else
             <div class="card-body">
 
                 <small class="text-muted">
-                    @note.CreatedAt
-                    .ToLocalTime()
-                    .ToString("dd/MM/yyyy HH:mm")
+                    @note.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                 </small>
-
                 <p class="mt-2"
                    style="white-space: pre-wrap;">@note.Content</p>
 

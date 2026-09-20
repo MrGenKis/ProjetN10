@@ -20,25 +20,47 @@ public class PatientsController : Controller
         _riskApiService = riskApiService;
     }
 
+    private bool IsUserConnected()
+    {
+        var token =
+            HttpContext.Session.GetString("JwtToken");
+
+        return !string.IsNullOrWhiteSpace(token);
+    }
+
     public async Task<IActionResult> Index()
     {
-        var patients = await _patientApiService.GetPatientsAsync();
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
+        var patients =
+            await _patientApiService.GetPatientsAsync();
 
         return View(patients);
     }
 
     public async Task<IActionResult> Details(int id)
     {
-        var patient = await _patientApiService.GetPatientAsync(id);
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
+        var patient =
+            await _patientApiService.GetPatientAsync(id);
 
         if (patient == null)
         {
             return NotFound();
         }
 
-        var notes = await _noteApiService.GetNotesByPatientAsync(id);
+        var notes =
+            await _noteApiService.GetNotesByPatientAsync(id);
 
-        var riskAssessment = await _riskApiService.GetRiskAsync(id);
+        var riskAssessment =
+            await _riskApiService.GetRiskAsync(id);
 
         var viewModel = new PatientDetailsViewModel
         {
@@ -56,6 +78,11 @@ public class PatientsController : Controller
         int patientId,
         string newNoteContent)
     {
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
         if (patientId <= 0)
         {
             return BadRequest();
@@ -63,7 +90,8 @@ public class PatientsController : Controller
 
         if (string.IsNullOrWhiteSpace(newNoteContent))
         {
-            TempData["NoteError"] = "La note ne peut pas être vide.";
+            TempData["NoteError"] =
+                "La note ne peut pas être vide.";
 
             return RedirectToAction(
                 nameof(Details),
@@ -71,10 +99,11 @@ public class PatientsController : Controller
             );
         }
 
-        var success = await _noteApiService.CreateNoteAsync(
-            patientId,
-            newNoteContent
-        );
+        var success =
+            await _noteApiService.CreateNoteAsync(
+                patientId,
+                newNoteContent
+            );
 
         if (!success)
         {
@@ -91,20 +120,32 @@ public class PatientsController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(PatientViewModel patient)
+    public async Task<IActionResult> Create(
+        PatientViewModel patient)
     {
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
         if (!ModelState.IsValid)
         {
             return View(patient);
         }
 
         var success =
-            await _patientApiService.CreatePatientAsync(patient);
+            await _patientApiService
+                .CreatePatientAsync(patient);
 
         if (!success)
         {
@@ -122,6 +163,11 @@ public class PatientsController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
         var patient =
             await _patientApiService.GetPatientAsync(id);
 
@@ -138,13 +184,19 @@ public class PatientsController : Controller
     public async Task<IActionResult> Edit(
         PatientViewModel patient)
     {
+        if (!IsUserConnected())
+        {
+            return Redirect("/Account/Login");
+        }
+
         if (!ModelState.IsValid)
         {
             return View(patient);
         }
 
         var success =
-            await _patientApiService.UpdatePatientAsync(patient);
+            await _patientApiService
+                .UpdatePatientAsync(patient);
 
         if (!success)
         {

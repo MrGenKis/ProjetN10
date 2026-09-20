@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RiskService.Services;
 
 namespace RiskService.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class RiskController : ControllerBase
@@ -15,12 +17,12 @@ public class RiskController : ControllerBase
         _riskAssessmentService = riskAssessmentService;
     }
 
-    // GET: api/risk/1
     [HttpGet("{patientId}")]
     public async Task<IActionResult> GetRisk(int patientId)
     {
         var assessment =
-            await _riskAssessmentService.AssessRiskAsync(patientId);
+            await _riskAssessmentService
+                .AssessRiskAsync(patientId);
 
         if (assessment == null)
         {

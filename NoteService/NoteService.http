@@ -46,3 +46,11 @@ Content-Type: application/json
 }
 
 ###
+@NoteService_HostAddress = https://localhost:7095
+@token = TON_TOKEN_ICI
+
+
+GET {{NoteService_HostAddress}}/api/notes
+Authorization: Bearer {{token}}
+
+###

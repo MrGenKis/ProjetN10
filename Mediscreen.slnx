@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Éléments de solution/">
+    <File Path=".env" />
+  </Folder>
   <Project Path="AuthService/AuthService.csproj" Id="8289f30e-5a24-4ef8-a3db-923ffcf0c91e" />
   <Project Path="docker-compose.dcproj">
     <Build />

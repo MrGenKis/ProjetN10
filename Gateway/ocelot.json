@@ -2,11 +2,11 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/patients",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5247
+          "Port": 7165
         }
       ],
       "UpstreamPathTemplate": "/api/patients",
@@ -14,11 +14,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/patients/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5247
+          "Port": 7165
         }
       ],
       "UpstreamPathTemplate": "/api/patients/{id}",
@@ -26,11 +26,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/notes",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5183
+          "Port": 7095
         }
       ],
       "UpstreamPathTemplate": "/api/notes",
@@ -38,11 +38,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/notes/patient/{patientId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5183
+          "Port": 7095
         }
       ],
       "UpstreamPathTemplate": "/api/notes/patient/{patientId}",
@@ -50,15 +50,39 @@
     },
     {
       "DownstreamPathTemplate": "/api/risk/{patientId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5249
+          "Port": 7202
         }
       ],
       "UpstreamPathTemplate": "/api/risk/{patientId}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7213
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7213
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/register",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ],
   "GlobalConfiguration": {

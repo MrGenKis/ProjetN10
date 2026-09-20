@@ -4,3 +4,11 @@ GET {{RiskService_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+@RiskService_HostAddress = https://localhost:7202
+@token = TON_TOKEN_ICI
+
+
+GET {{RiskService_HostAddress}}/api/risk/1
+Authorization: Bearer {{token}}
+
+###

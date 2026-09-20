@@ -39,6 +39,18 @@ var jwtKey =
         "La clé JWT est absente."
     );
 
+var jwtIssuer =
+    builder.Configuration["Jwt:Issuer"]
+    ?? throw new InvalidOperationException(
+        "L'émetteur JWT est absent."
+    );
+
+var jwtAudience =
+    builder.Configuration["Jwt:Audience"]
+    ?? throw new InvalidOperationException(
+        "L'audience JWT est absente."
+    );
+
 var key = new SymmetricSecurityKey(
     Encoding.UTF8.GetBytes(jwtKey)
 );
@@ -62,11 +74,8 @@ builder.Services
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    builder.Configuration["Jwt:Issuer"],
-
-                ValidAudience =
-                    builder.Configuration["Jwt:Audience"],
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
 
                 IssuerSigningKey = key
             };
@@ -81,7 +90,39 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+using (var scope = app.Services.CreateScope())
+{
+    var context =
+        scope.ServiceProvider
+            .GetRequiredService<AuthDbContext>();
+
+    var retryCount = 0;
+    const int maxRetries = 10;
+
+    while (retryCount < maxRetries)
+    {
+        try
+        {
+            context.Database.Migrate();
+            break;
+        }
+        catch
+        {
+            retryCount++;
+
+            Console.WriteLine(
+                $"SQL Server n'est pas encore prêt pour AuthService. Tentative {retryCount}/{maxRetries}..."
+            );
+
+            Thread.Sleep(3000);
+        }
+    }
+}
+
+if (!app.Environment.IsEnvironment("Docker"))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

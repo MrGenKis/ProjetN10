@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteService.Data;
 using NoteService.Models;
 
 namespace NoteService.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotesController : ControllerBase
@@ -16,42 +18,45 @@ public class NotesController : ControllerBase
         _context = context;
     }
 
-    // GET: api/notes
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Note>>> GetNotes()
     {
-        var notes = await _context.Notes
-            .OrderByDescending(n => n.CreatedAt)
-            .ToListAsync();
+        var notes =
+            await _context.Notes
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
 
         return Ok(notes);
     }
 
-    // GET: api/notes/patient/1
     [HttpGet("patient/{patientId}")]
     public async Task<ActionResult<IEnumerable<Note>>> GetNotesByPatient(
         int patientId)
     {
-        var notes = await _context.Notes
-            .Where(n => n.PatientId == patientId)
-            .OrderBy(n => n.CreatedAt)
-            .ToListAsync();
+        var notes =
+            await _context.Notes
+                .Where(n => n.PatientId == patientId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
 
         return Ok(notes);
     }
 
-    // POST: api/notes
     [HttpPost]
     public async Task<ActionResult<Note>> CreateNote(Note note)
     {
         if (note.PatientId <= 0)
         {
-            return BadRequest("L'identifiant du patient est invalide.");
+            return BadRequest(
+                "L'identifiant du patient est invalide."
+            );
         }
 
         if (string.IsNullOrWhiteSpace(note.Content))
         {
-            return BadRequest("Le contenu de la note est obligatoire.");
+            return BadRequest(
+                "Le contenu de la note est obligatoire."
+            );
         }
 
         note.Id = Guid.NewGuid().ToString();

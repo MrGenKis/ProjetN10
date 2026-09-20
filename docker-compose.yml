@@ -6,7 +6,7 @@ services:
 
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Mediscreen123!"
+      MSSQL_SA_PASSWORD: "${SQL_SA_PASSWORD}"
 
     ports:
       - "1433:1433"
@@ -26,6 +26,32 @@ services:
       - mongodb_data:/data/db
 
 
+  authservice:
+    image: mediscreen-authservice
+    container_name: mediscreen-authservice
+
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: "Server=patientdb,1433;Database=MediscreenAuthDb;User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True;"
+
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "MediscreenAuthService"
+      Jwt__Audience: "MediscreenApplication"
+      Jwt__ExpiresMinutes: "60"
+
+    ports:
+      - "8085:8080"
+
+    depends_on:
+      - patientdb
+
+
   patientservice:
     image: mediscreen-patientservice
     container_name: mediscreen-patientservice
@@ -38,7 +64,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Docker
       ASPNETCORE_URLS: http://+:8080
 
-      ConnectionStrings__DefaultConnection: "Server=patientdb,1433;Database=MediscreenPatientDb;User Id=sa;Password=Mediscreen123!;TrustServerCertificate=True;"
+      ConnectionStrings__DefaultConnection: "Server=patientdb,1433;Database=MediscreenPatientDb;User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True;"
+
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "MediscreenAuthService"
+      Jwt__Audience: "MediscreenApplication"
 
     ports:
       - "8080:8080"
@@ -62,6 +92,10 @@ services:
       MongoDb__ConnectionString: "mongodb://mongodb:27017"
       MongoDb__DatabaseName: "MediscreenNotesDb"
 
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "MediscreenAuthService"
+      Jwt__Audience: "MediscreenApplication"
+
     ports:
       - "8083:8080"
 
@@ -83,6 +117,10 @@ services:
 
       Services__PatientServiceUrl: "http://patientservice:8080/"
       Services__NoteServiceUrl: "http://noteservice:8080/"
+
+      Jwt__Key: "${JWT_KEY}"
+      Jwt__Issuer: "MediscreenAuthService"
+      Jwt__Audience: "MediscreenApplication"
 
     ports:
       - "8084:8080"
@@ -108,6 +146,7 @@ services:
       - "8081:8080"
 
     depends_on:
+      - authservice
       - patientservice
       - noteservice
       - riskservice
